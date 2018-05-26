@@ -3,6 +3,8 @@ let GetState = require('./lib/get-state.js')
 let SendTx = require('./lib/send-tx.js')
 let getPeerGCI = require('./lib/gci-get-peer.js')
 let Proxmise = require('proxmise')
+let jpfs = require('jpfs')
+let { parse, stringify } = require('deterministic-json')
 
 function connect(GCI, opts = {}) {
   return new Promise(async (resolve, reject) => {
@@ -10,7 +12,12 @@ function connect(GCI, opts = {}) {
     let genesis = opts.genesis
 
     if (!genesis) {
-      throw new Error('genesis discovery by GCI not implemented yet')
+      let rawGenesis = await jpfs.get(GCI)
+      try {
+        genesis = parse(rawGenesis)
+      } catch (e) {
+        throw new Error('invalid GCI')
+      }
     }
 
     let nodeAddress
@@ -20,7 +27,7 @@ function connect(GCI, opts = {}) {
       nodeAddress = nodes[randomIndex]
     } else {
       // gci discovery magic...
-      throw new Error('node discovery not implemented yet')
+      nodeAddress = await getPeerGCI(GCI)
     }
 
     let lc = await startLightClientFromGenesis(genesis, nodeAddress)
