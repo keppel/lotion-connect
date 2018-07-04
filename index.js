@@ -33,6 +33,7 @@ function connect(GCI, opts = {}) {
     let lc = await startLightClientFromGenesis(genesis, nodeAddress)
     let getState = GetState(lc)
     let sendTx = SendTx(lc)
+    await delay()
     resolve({
       getState,
       send: sendTx,
@@ -40,6 +41,12 @@ function connect(GCI, opts = {}) {
         return await getState(path.join('.'))
       })
     })
+  })
+}
+
+function delay(ms = 1000) {
+  return new Promise((resolve, reject) => {
+    setTimeout(resolve, ms)
   })
 }
 
