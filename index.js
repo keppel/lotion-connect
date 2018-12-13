@@ -37,9 +37,12 @@ function connect(GCI, opts = {}) {
     resolve({
       getState,
       send: sendTx,
-      state: Proxmise(async path => {
-        return await getState(path.join('.'))
-      })
+      state: Proxmise(path => {
+        return getState(path.join('.'))
+      }),
+      get validators () {
+        return lc._state.validators
+      }
     })
   })
 }
