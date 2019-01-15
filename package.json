@@ -1,6 +1,6 @@
 {
   "name": "lotion-connect",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "browser-friendly lotion light client",
   "main": "index.js",
   "scripts": {
