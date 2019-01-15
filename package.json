@@ -11,9 +11,9 @@
   "license": "ISC",
   "dependencies": {
     "deterministic-json": "^1.0.5",
-    "jpfs": "0.0.3",
+    "jpfs": "0.0.4",
     "lodash.get": "^4.4.2",
-    "peer-channel": "^0.1.1",
+    "peer-channel": "^0.1.2",
     "proxmise": "^1.0.0",
     "tendermint": "^3.4.0",
     "varstruct": "^6.1.2"
