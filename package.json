@@ -15,7 +15,7 @@
     "lodash.get": "^4.4.2",
     "peer-channel": "^0.1.2",
     "proxmise": "^1.0.0",
-    "tendermint": "^3.4.0",
+    "tendermint": "^3.4.2",
     "varstruct": "^6.1.2"
   }
 }
