@@ -5,6 +5,7 @@ let getPeerGCI = require('./lib/gci-get-peer.js')
 let Proxmise = require('proxmise')
 let jpfs = require('jpfs')
 let { parse, stringify } = require('deterministic-json')
+let { EventEmitter } = require('events')
 
 function connect(GCI, opts = {}) {
   return new Promise(async (resolve, reject) => {
@@ -34,16 +35,21 @@ function connect(GCI, opts = {}) {
     let getState = GetState(lc)
     let sendTx = SendTx(lc)
     await delay()
-    resolve({
-      getState,
-      send: sendTx,
-      state: Proxmise(path => {
-        return getState(path.join('.'))
-      }),
-      get validators () {
-        return lc._state.validators
-      }
-    })
+    let bus = new EventEmitter()
+    lc.on('error', e => bus.emit('error', e))
+    resolve(
+      Object.assign(bus, {
+        getState,
+        send: sendTx,
+        lightClient: lc,
+        state: Proxmise(path => {
+          return getState(path.join('.'))
+        }),
+        get validators() {
+          return lc._state.validators
+        }
+      })
+    )
   })
 }
 
