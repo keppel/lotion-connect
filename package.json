@@ -10,10 +10,10 @@
   "author": "Judd Keppel <kepzorz@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "debug": "^4.1.1",
     "deterministic-json": "^1.0.5",
-    "jpfs": "0.0.4",
+    "discovery-channel": "^5.5.1",
     "lodash.get": "^4.4.2",
-    "peer-channel": "^0.1.2",
     "proxmise": "^1.0.0",
     "tendermint": "^4.0.2",
     "varstruct": "^6.1.2"

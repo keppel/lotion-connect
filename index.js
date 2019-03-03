@@ -1,9 +1,11 @@
-let startLightClientFromGenesis = require('./lib/connect-by-address-from-genesis.js')
+let {
+  startLightClientFromGCI,
+  startLightClientFromGenesis
+} = require('./lib/connect-by-address.js')
 let GetState = require('./lib/get-state.js')
 let SendTx = require('./lib/send-tx.js')
-let getPeerGCI = require('./lib/gci-get-peer.js')
+let discoverPeerByGCI = require('./lib/gci-get-peer.js')
 let Proxmise = require('proxmise')
-let jpfs = require('jpfs')
 let { parse, stringify } = require('deterministic-json')
 let { EventEmitter } = require('events')
 
@@ -12,29 +14,36 @@ function connect(GCI, opts = {}) {
     let nodes = opts.nodes || []
     let genesis = opts.genesis
 
-    if (!genesis) {
-      let rawGenesis = await jpfs.get(GCI)
-      try {
-        genesis = parse(rawGenesis)
-      } catch (e) {
-        throw new Error('invalid GCI')
+    if (!GCI) {
+      if (nodes.length === 0) {
+        throw Error('Cannot connect, must specify GCI or node addresses')
+      } else if (genesis == null) {
+        throw Error('Cannot verify state, must specify GCI or genesis')
       }
     }
 
-    let nodeAddress
+    // TODO: support bootstrapping from known recent header hash
+    // instead of just by GCI->genesis->lc_state
+    let lc
     if (nodes.length) {
       // randomly sample from supplied seed nodes
+      // TODO: pass all of these into light client
+      //       once it supports multiple peers
       let randomIndex = Math.floor(Math.random() * nodes.length)
-      nodeAddress = nodes[randomIndex]
+      let address = nodes[randomIndex]
+      if (genesis) {
+        lc = await startLightClientFromGenesis(genesis, address)
+      } else {
+        lc = await startLightClientFromGCI(GCI, address)
+      }
     } else {
       // gci discovery magic...
-      nodeAddress = await getPeerGCI(GCI)
+      lc = await discoverPeerByGCI(GCI)
     }
 
-    let lc = await startLightClientFromGenesis(genesis, nodeAddress)
     let getState = GetState(lc)
     let sendTx = SendTx(lc)
-    await delay()
+
     let bus = new EventEmitter()
     lc.on('error', e => bus.emit('error', e))
     resolve(
@@ -50,12 +59,6 @@ function connect(GCI, opts = {}) {
         }
       })
     )
-  })
-}
-
-function delay(ms = 1000) {
-  return new Promise((resolve, reject) => {
-    setTimeout(resolve, ms)
   })
 }
 
