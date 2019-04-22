@@ -18,5 +18,11 @@
     "proxmise": "^1.0.0",
     "tendermint": "^4.0.2",
     "varstruct": "^6.1.2"
+  },
+  "devDependencies": {
+    "ava": "^1.2.1",
+    "depcheck": "^0.7.2",
+    "lotion": "^0.4.10",
+    "tendermint-node": "^5.0.2"
   }
 }
