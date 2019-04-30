@@ -4,7 +4,7 @@
   "description": "browser-friendly lotion light client",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "ava test/*.js"
   },
   "keywords": [],
   "author": "Judd Keppel <kepzorz@gmail.com>",
