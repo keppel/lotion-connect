@@ -4,7 +4,7 @@
   "description": "browser-friendly lotion light client",
   "main": "index.js",
   "scripts": {
-    "test": "ava test/*.js"
+    "test": "depcheck && ava test/*.js"
   },
   "keywords": [],
   "author": "Judd Keppel <kepzorz@gmail.com>",
@@ -23,7 +23,6 @@
   "devDependencies": {
     "ava": "^1.2.1",
     "depcheck": "^0.7.2",
-    "lotion": "^0.4.10",
-    "tendermint-node": "^5.0.2"
+    "lotion": "^0.4.10"
   }
 }
